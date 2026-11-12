@@ -1,6 +1,6 @@
 class Patient:
 
-    def __init__(self, name, lastname, email, password, createdAt, active, age, sex, currentDiagnosis, dateOfEntry)
+    def __init__(self, name, lastname, email, password, createdAt, active, age, sex, currentDiagnosis, dateOfEntry):
         self.name = name
         self.lastname = lastname
         self.email = email

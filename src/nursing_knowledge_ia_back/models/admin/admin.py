@@ -1,6 +1,6 @@
 class Admin:
 
-    def __init__(self, name, lastname, email, password, createdAt, active, accessLevel)
+    def __init__(self, name, lastname, email, password, createdAt, active, accessLevel):
         self.name = name
         self.lastname = lastname
         self.email = email
