@@ -1,9 +1,6 @@
 from pymongo import MongoClient
 
 class DoctorRepository:
-    def checkExist(self,doctor_register:str) -> bool:
-        doctor = self.collection.find_one({"register": doctor_register})
-        return doctor is not None
     
     def __init__(self, client: MongoClient):
         self.client = client
@@ -24,3 +21,7 @@ class DoctorRepository:
     def delete(self, doctor_id: str) -> bool:
         result = self.collection.delete_one({"_id": doctor_id})
         return result.deleted_count > 0
+
+    def checkExist(self,doctor_register:str) -> bool:
+            doctor = self.collection.find_one({"register": doctor_register})
+            return doctor is not None
