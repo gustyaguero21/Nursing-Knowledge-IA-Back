@@ -1,67 +1,47 @@
 
+
 import re
 from datetime import date, datetime
 
 
 def validate_patient(patient):
-    errors = {}
 
-    # Validar nombre
+    # Validate patient's first name
     if not isinstance(patient.name, str) or not patient.name.strip():
-        errors["name"] = "Name is required."
+        return False
     elif any(character.isdigit() for character in patient.name):
-        errors["name"] = "Name cannot contain numbers."
+        return False
 
-    # Validar apellido
+    # Validate patient's last name
     if not isinstance(patient.lastname, str) or not patient.lastname.strip():
-        errors["lastname"] = "Last name is required."
+        return False
     elif any(character.isdigit() for character in patient.lastname):
-        errors["lastname"] = "Last name cannot contain numbers."
+        return False
 
-    # Validar email
+    # Validate email address
     if not isinstance(patient.email, str) or not patient.email.strip():
-        errors["email"] = "Email is required."
+        return False
     elif not re.fullmatch(
         r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
         patient.email.strip()
     ):
-        errors["email"] = "Email format is invalid."
+        return False
 
-    # Validar edad
+    # Validate patient's age
     if type(patient.age) is not int or patient.age < 0:
-        errors["age"] = "Age must be a non-negative integer."
+        return False
 
-    # Validar género
+    # Validate patient's gender
     if not isinstance(patient.sex, str) or not patient.sex.strip():
-        errors["sex"] = "Sex is required."
+        return False
 
-    # Validar diágnostico actual
+    # Validate current diagnosis
     if not isinstance(patient.currentDiagnosis, str):
-        errors["currentDiagnosis"] = (
-            "Current diagnosis must be a string."
-        )
+        return False
 
-    # Validar fecha ingreso
+    # Validate date of entry
     if not isinstance(patient.dateOfEntry, (date, datetime)):
-        errors["dateOfEntry"] = (
-            "Date of entry must be a valid date."
-        )
+        return False
 
-    if errors:
-        return {
-            "valid": False,
-            "errors": errors
-        }
-
-    return {
-        "valid": True,
-        "data": {
-            "name": patient.name.strip(),
-            "lastname": patient.lastname.strip(),
-            "email": patient.email.strip(),
-            "age": patient.age,
-            "sex": patient.sex.strip(),
-            "currentDiagnosis": patient.currentDiagnosis.strip(),
-            "dateOfEntry": patient.dateOfEntry.isoformat()
-        }
-    }
+    # Return True if all validations pass
+    return True
