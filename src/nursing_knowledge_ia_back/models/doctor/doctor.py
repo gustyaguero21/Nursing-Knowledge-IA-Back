@@ -1,6 +1,6 @@
 class Doctor:
 
-    def __init__(self, name, lastname, email, password, createdAt, active, enrollment, especialitation):
+    def __init__(self, name, lastname, email, password, createdAt, active, enrollment, especialitation,register):
         self.name = name
         self.lastname = lastname
         self.email = email
@@ -9,3 +9,4 @@ class Doctor:
         self.active = active
         self.enrollment = enrollment
         self.especialitation = especialitation
+        self.register=register
