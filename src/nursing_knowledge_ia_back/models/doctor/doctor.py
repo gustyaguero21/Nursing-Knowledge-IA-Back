@@ -10,3 +10,4 @@ class Doctor:
         self.enrollment = enrollment
         self.especialitation = especialitation
         self.register=register
+        
