@@ -11,7 +11,6 @@ _connection_lock = Lock()
 
 
 def InitConnection(uri: str, db_name: str) -> Database | None:
-    print("URI recibida:", repr(uri))
     with _connection_lock:
         key = (uri, db_name)
         if key in _databases:
