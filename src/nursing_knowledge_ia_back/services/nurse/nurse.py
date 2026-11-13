@@ -82,4 +82,3 @@ class Nurseservice:
 
     def delete_nurse(self, email: str) -> bool:
         return self.nurse_repo.delete(email)
-    
