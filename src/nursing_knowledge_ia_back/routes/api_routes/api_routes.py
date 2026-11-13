@@ -2,14 +2,17 @@ from flask import Blueprint, request
 
 from nursing_knowledge_ia_back.controllers.admin.admin import AdminController
 from nursing_knowledge_ia_back.controllers.doctor.doctor import DoctorController
+from nursing_knowledge_ia_back.controllers.login.login import LoginController
 from nursing_knowledge_ia_back.controllers.nurse.nurse import NurseController
 from nursing_knowledge_ia_back.controllers.patient.patient import PatientController
 from nursing_knowledge_ia_back.repositories.admin.admin import AdminRepository
 from nursing_knowledge_ia_back.repositories.doctor.doctor import DoctorRepository
+from nursing_knowledge_ia_back.repositories.login.login import LoginRepository
 from nursing_knowledge_ia_back.repositories.nurse.nurse import NurseRepository
 from nursing_knowledge_ia_back.repositories.patient.patient import PatientRepository
 from nursing_knowledge_ia_back.services.admin.admin import AdminService
 from nursing_knowledge_ia_back.services.doctor.doctor import DoctorService
+from nursing_knowledge_ia_back.services.login.login import LoginService
 from nursing_knowledge_ia_back.services.nurse.nurse import NurseService
 from nursing_knowledge_ia_back.services.patient.patient import PatientService
 
@@ -29,8 +32,14 @@ class ApiRoutes:
         patient_repository = PatientRepository(self.client)
         patient_service = PatientService(patient_repository)
         self.patient_controller = PatientController(patient_service)
+        login_repository = LoginRepository(self.client)
+        login_service = LoginService(login_repository)
+        self.login_controller = LoginController(login_service)
         self.blueprint = Blueprint("admins", __name__)
 
+        self.blueprint.add_url_rule(
+            "/login", "login", self.login, methods=["POST"]
+        )
         self.blueprint.add_url_rule(
             "/admins", "create_admin", self.create_admin, methods=["POST"]
         )
@@ -121,6 +130,9 @@ class ApiRoutes:
 
     def register_routes(self, app):
         app.register_blueprint(self.blueprint)
+
+    def login(self):
+        return self.login_controller.login(request.get_json(silent=True))
 
     def create_admin(self):
         return self.admin_controller.create_admin(request.get_json(silent=True))

@@ -12,6 +12,7 @@ dependencies = [
     "flask>=3.1.3",
     "functools",
     "pymongo>=4.19.0",
+    "typing",
     "werkzeug>=3.1.9",
 ]
 
