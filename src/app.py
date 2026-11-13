@@ -1,26 +1,35 @@
 from nursing_knowledge_ia_back.routes.server.server import StartServer
 from nursing_knowledge_ia_back.config.env import GetDBName, GetUri, LoadEnv
 from nursing_knowledge_ia_back.database.connection import InitConnection
-from nursing_knowledge_ia_back.repositories.doctor.doctor import DoctorRepository
-from nursing_knowledge_ia_back.services.doctor.doctor import DoctorService
+from nursing_knowledge_ia_back.repositories.patient.patient import PatientRepository
+from nursing_knowledge_ia_back.services.patient.patient import PatientService
+from datetime import datetime
 
 def StartApp():
     LoadEnv()
     app=StartServer()
     client=InitConnection(GetUri(),GetDBName())
-    doctorRepo=DoctorRepository(client)
-    doctorService=DoctorService(doctorRepo)
-    doctorService.create_doctor({
-        "name": "John",
+
+
+
+
+
+    patientRepo=PatientRepository(client)
+    patientService=PatientService(patientRepo)
+    patientService.create_patient({
+        "name": "Jane",
         "lastname": "Doe",
-        "email": "john.doe@example.com",
+        "pid": "PID123",
+        "email": "jane.doe@example.com",
         "password": "password123",
-        "createdAt": "2023-01-01",
+        "createdAt": datetime(2023, 1, 1),
         "active": True,
-        "enrollment": "ENR123",
-        "especialitation": "Cardiology",
-        "register": "REG123"
+        "age": 30,
+        "sex": "female",
+        "currentDiagnosis": "Hypertension",
+        "dateOfEntry": datetime(2023, 1, 1)
     })
+
 
     app.run(debug=True,port=8080)
 

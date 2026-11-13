@@ -3,13 +3,6 @@ from typing import Union
 from pymongo import MongoClient
 
 class PatientRepository:
-    def checkExist(self,patient_password: str, patient_email: str) -> Union[bool, Exception]:
-        try:
-            patient = self.collection.find_one({"email": patient_email, "password": patient_password})
-            return patient is not False
-        except Exception as error:
-            return error
-
     def __init__(self, client: MongoClient):
         self.client = client
         self.collection = self.client["nursing_knowledge_ia"]["patients"]
@@ -46,5 +39,12 @@ class PatientRepository:
         try:
             result = self.collection.delete_one({"pid": pid})
             return result.deleted_count > 0
+        except Exception as error:
+            return error
+
+    def checkExists(self, pid: str) -> Union[bool, Exception]:
+        try:
+            patient = self.collection.find_one({"pid": pid})
+            return patient is not None
         except Exception as error:
             return error
