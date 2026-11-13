@@ -3,10 +3,16 @@ from typing import Union
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 
-class adminRepository:
+class AdminRepository:
     def __init__(self, client: MongoClient):
         self.client = client
         self.collection = self.client["nursing_knowledge_ia"]["admins"]
+
+    def CheckExists(self, admin_email: str) -> Union[bool, PyMongoError]:
+        try:
+            return self.collection.find_one({"email": admin_email}) is not None
+        except PyMongoError as error:
+            return error
 
     def create(self, admin_data: dict) -> Union[str, PyMongoError]:
         try:
@@ -15,16 +21,16 @@ class adminRepository:
         except PyMongoError as error:
             return error
 
-    def update(self, admin_id: str, update_data: dict) -> Union[bool, PyMongoError]:
+    def update(self, admin_email: str, update_data: dict) -> Union[bool, PyMongoError]:
         try:
-            result = self.collection.update_one({"_id": admin_id}, {"$set": update_data})
+            result = self.collection.update_one({"email": admin_email}, {"$set": update_data})
             return result.modified_count > 0
         except PyMongoError as error:
             return error
 
-    def delete(self, admin_id: str) -> Union[bool, PyMongoError]:
+    def delete(self, admin_email: str) -> Union[bool, PyMongoError]:
         try:
-            result = self.collection.delete_one({"_id": admin_id})
+            result = self.collection.delete_one({"email": admin_email})
             return result.deleted_count > 0
         except PyMongoError as error:
             return error

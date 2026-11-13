@@ -18,30 +18,32 @@ class DoctorRepository:
 
     def get(self) -> Union[list, str]:
         try:
-            return list(self.collection.find({}))
+            return list(self.collection.find({}, {"password": 0}))
         except PyMongoError as error:
             return str(error)
 
-    def get_by_id(self, doctor_id: str) -> Union[dict, str]:
+    def get_by_register(self, doctor_register: str) -> Union[dict, str]:
         try:
-            doctor = self.collection.find({ "name": doctor_id, "lastname": doctor_id, "email": doctor_id, "register": doctor_id, "especialitation": doctor_id, "enrollment": doctor_id, "createdAt": doctor_id, "active": doctor_id})
+            doctor = self.collection.find_one({"register": doctor_register}, {"password": 0})
             return doctor
         except PyMongoError as error:
             return str(error)
 
-    def update(self, doctor_id: str, update_data: dict) -> Union[bool, str]:
+
+    def update(self, register: str, update_data: dict) -> Union[bool, str]:
         try:
-            result = self.collection.update_one({"_id": doctor_id}, {"$set": update_data})
+            result = self.collection.update_one({"register": register}, {"$set": update_data})
             return result.modified_count > 0
         except PyMongoError as error:
             return str(error)
 
-    def delete(self, doctor_id: str) -> Union[bool, str]:
+    def delete(self, doctor_register: str) -> Union[bool, str]:
         try:
-            result = self.collection.delete_one({"_id": doctor_id})
+            result = self.collection.delete_one({"register": doctor_register})
             return result.deleted_count > 0
         except PyMongoError as error:
             return str(error)
+
 
     def checkExist(self,doctor_register:str) -> Union[bool, str]:
         try:

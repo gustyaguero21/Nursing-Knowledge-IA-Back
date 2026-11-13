@@ -23,27 +23,28 @@ class PatientRepository:
 
     def get(self) -> Union[list, Exception]:
         try:
-            return list(self.collection.find({}))
+            return list(self.collection.find({},{"password":0}))
         except Exception as error:
             return error
 
-    def get_by_id(self, patient_id: str) -> Union[dict, Exception]:
+    def get_by_pid(self, pid: str) -> Union[dict, Exception]:
         try:
-            patient = self.collection.find({"_id": patient_id, "name": patient_id, "lastname": patient_id, "email": patient_id, "createdAt": patient_id, "active": patient_id, "age": patient_id, "sex": patient_id, "currentDiagnosis": patient_id, "dateOfEntry": patient_id})
+            patient = self.collection.find_one({"pid": pid}, {"password": 0})
             return patient
         except Exception as error:
             return error
 
-    def update(self, patient_id: str, update_data: dict) -> Union[bool, Exception]:
+
+    def update(self, pid: str, update_data: dict) -> Union[bool, Exception]:
         try:
-            result = self.collection.update_one({"_id": patient_id}, {"$set": update_data})
+            result = self.collection.update_one({"pid": pid}, {"$set": update_data})
             return result.modified_count > 0
         except Exception as error:
             return error
 
-    def delete(self, patient_id: str) -> Union[bool, Exception]:
+    def delete(self, pid: str) -> Union[bool, Exception]:
         try:
-            result = self.collection.delete_one({"_id": patient_id})
+            result = self.collection.delete_one({"pid": pid})
             return result.deleted_count > 0
         except Exception as error:
             return error
