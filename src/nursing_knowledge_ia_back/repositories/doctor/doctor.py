@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 
 class DoctorRepository:
-    
+
     def __init__(self, client: MongoClient):
         self.client = client
         self.collection = self.client["nursing_knowledge_ia"]["doctors"]
@@ -10,9 +10,12 @@ class DoctorRepository:
         result = self.collection.insert_one(doctor_data)
         return str(result.inserted_id)
 
-    def get(self, doctor_id: str) -> dict:
+    def get(self) -> list:
+        return list(self.collection.find({}))
+
+    def get_by_id(self, doctor_id: str) -> dict:
         doctor = self.collection.find({ "name": doctor_id, "lastname": doctor_id, "email": doctor_id, "register": doctor_id, "especialitation": doctor_id, "enrollment": doctor_id, "createdAt": doctor_id, "active": doctor_id})
-        return doctor 
+        return doctor
 
     def update(self, doctor_id: str, update_data: dict) -> bool:
         result = self.collection.update_one({"_id": doctor_id}, {"$set": update_data})
