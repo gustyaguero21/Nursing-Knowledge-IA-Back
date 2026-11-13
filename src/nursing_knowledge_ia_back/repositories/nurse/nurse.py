@@ -43,7 +43,7 @@ class NurseRepository:
             return error
 
 
-    def checkExist(self, nurse_file: str) -> Union[bool, Exception]:
+    def checkExists(self, nurse_file: str) -> Union[bool, Exception]:
         try:
             nurse = self.collection.find_one({"file": nurse_file})
             return nurse is not None

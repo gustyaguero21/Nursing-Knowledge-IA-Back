@@ -35,9 +35,9 @@ class PatientRepository:
             return error
 
 
-    def update(self, patient_id: str, update_data: dict) -> Union[bool, Exception]:
+    def update(self, pid: str, update_data: dict) -> Union[bool, Exception]:
         try:
-            result = self.collection.update_one({"_id": patient_id}, {"$set": update_data})
+            result = self.collection.update_one({"pid": pid}, {"$set": update_data})
             return result.modified_count > 0
         except Exception as error:
             return error

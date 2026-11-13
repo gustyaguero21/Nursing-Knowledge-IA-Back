@@ -8,6 +8,12 @@ class AdminRepository:
         self.client = client
         self.collection = self.client["nursing_knowledge_ia"]["admins"]
 
+    def CheckExists(self, admin_email: str) -> Union[bool, PyMongoError]:
+        try:
+            return self.collection.find_one({"email": admin_email}) is not None
+        except PyMongoError as error:
+            return error
+
     def create(self, admin_data: dict) -> Union[str, PyMongoError]:
         try:
             result = self.collection.insert_one(admin_data)

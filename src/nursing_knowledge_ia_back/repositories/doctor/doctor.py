@@ -22,7 +22,7 @@ class DoctorRepository:
         except PyMongoError as error:
             return str(error)
 
-    def get_by_id(self, doctor_register: str) -> Union[dict, str]:
+    def get_by_register(self, doctor_register: str) -> Union[dict, str]:
         try:
             doctor = self.collection.find_one({"register": doctor_register}, {"password": 0})
             return doctor

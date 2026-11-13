@@ -1,6 +1,8 @@
 
 # Import the regular expression module to validate email addresses.
 import re
+import hashlib
+import secrets
 
 # Import date types to validate the administrator's creation date.
 from datetime import date, datetime
@@ -56,18 +58,36 @@ class AdminService:
         if not self.validate_admin(admin_data):
             return "Invalid administrator data"
 
-        if self.admin_repo.chekExist(admin_data['name']):
-            return "Administrator already exists" 
+        if self.admin_repo.checkExists(admin_data['name']):
+            return "Administrator already exists"
 
         else:
-            self.admin_repo.create(admin_data)
+
+
+            # Almacenar un hash con sal única, nunca la clave en texto plano.
+            salt = secrets.token_bytes(16)
+            iterations = 600_000
+            password_hash = hashlib.pbkdf2_hmac(
+                "sha256", admin_data['password'].encode('utf-8'), salt, iterations
+            )
+            hashed_admin_data = admin_data.copy()
+            hashed_admin_data['password'] = (
+                f"pbkdf2_sha256${iterations}${salt.hex()}${password_hash.hex()}"
+            )
+            self.admin_repo.create(hashed_admin_data)
             return "Administrator created successfully"
 
     def update_admin(self, name: str, update_data: dict) -> bool:
         if not self.validate_admin(update_data):
             return False
 
+        if not self.admin_repo.checkExists(name):
+            return False
+
         return self.admin_repo.update(name, update_data)
 
     def delete_admin(self, name: str) -> bool:
+        if not self.admin_repo.checkExists(name):
+            return False
+
         return self.admin_repo.delete(name)
