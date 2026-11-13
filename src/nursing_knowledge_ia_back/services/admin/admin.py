@@ -14,51 +14,52 @@ class AdminService:
     # Validate the administrator's data.
     def validate_admin(self, admin):
         # Validate the administrator's name.
-        if not isinstance(admin.name, str) or not admin.name.strip():
+        if not isinstance(admin['name'], str) or not admin['name'].strip():
             return False
 
-        if any(character.isdigit() for character in admin.name):
+        if any(character.isdigit() for character in admin['name']):
             return False
 
         # Validate the administrator's last name.
-        if not isinstance(admin.lastname, str) or not admin.lastname.strip():
+        if not isinstance(admin['lastname'], str) or not admin['lastname'].strip():
             return False
 
-        if any(character.isdigit() for character in admin.lastname):
+        if any(character.isdigit() for character in admin['lastname']):
             return False
 
         # Validate the email address.
-        if not isinstance(admin.email, str) or not admin.email.strip():
+        if not isinstance(admin['email'], str) or not admin['email'].strip():
             return False
 
         if not re.fullmatch(
             r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
-            admin.email.strip()
+            admin['email'].strip()
         ):
             return False
 
         # Validate the password.
-        if not isinstance(admin.password, str) or not admin.password.strip():
+        if not isinstance(admin['password'], str) or not admin['password'].strip():
             return False
 
-        if len(admin.password) < 8:
+        if len(admin['password']) < 8:
             return False
 
         # Validate the creation date.
-        if not isinstance(admin.createdAt, (date, datetime)):
+        if not isinstance(admin['createdAt'], (date, datetime)):
             return False
 
         # Validate the administrator's active status.
-        if type(admin.active) is not bool:
+        if type(admin['active']) is not bool:
             return False
 
         return True
+
 
     def create_admin(self, admin_data: dict) -> str:
         if not self.validate_admin(admin_data):
             return "Invalid administrator data"
 
-        if self.admin_repo.checkExists(admin_data['name']):
+        if self.admin_repo.checkExists(admin_data['email']):
             return "Administrator already exists"
 
         else:
