@@ -1,27 +1,49 @@
+from typing import Union
+
 from pymongo import MongoClient
 
 class PatientRepository:
-    def checkExist(self,patient_password: str, patient_email: str) -> bool:
-        patient = self.collection.find_one({"email": patient_email, "password": patient_password})
-        return patient is not False
-    
+    def checkExist(self,patient_password: str, patient_email: str) -> Union[bool, Exception]:
+        try:
+            patient = self.collection.find_one({"email": patient_email, "password": patient_password})
+            return patient is not False
+        except Exception as error:
+            return error
+
     def __init__(self, client: MongoClient):
         self.client = client
         self.collection = self.client["nursing_knowledge_ia"]["patients"]
 
-    def create(self, patient_data: dict) -> str:
-        result = self.collection.insert_one(patient_data)
-        return str(result.inserted_id)
+    def create(self, patient_data: dict) -> Union[str, Exception]:
+        try:
+            result = self.collection.insert_one(patient_data)
+            return str(result.inserted_id)
+        except Exception as error:
+            return error
 
-    def get_by_id(self, patient_id: str) -> dict:
-        patient = self.collection.find({"_id": patient_id, "name": patient_id, "lastname": patient_id, "email": patient_id, "createdAt": patient_id, "active": patient_id, "age": patient_id, "sex": patient_id, "currentDiagnosis": patient_id, "dateOfEntry": patient_id})
-        return patient
+    def get(self) -> Union[list, Exception]:
+        try:
+            return list(self.collection.find({}))
+        except Exception as error:
+            return error
 
-    def update(self, patient_id: str, update_data: dict) -> bool:
-        result = self.collection.update_one({"_id": patient_id}, {"$set": update_data})
-        return result.modified_count > 0
+    def get_by_id(self, patient_id: str) -> Union[dict, Exception]:
+        try:
+            patient = self.collection.find({"_id": patient_id, "name": patient_id, "lastname": patient_id, "email": patient_id, "createdAt": patient_id, "active": patient_id, "age": patient_id, "sex": patient_id, "currentDiagnosis": patient_id, "dateOfEntry": patient_id})
+            return patient
+        except Exception as error:
+            return error
 
-    def delete(self, patient_id: str) -> bool:
-        result = self.collection.delete_one({"_id": patient_id})
-        return result.deleted_count > 0
-    
+    def update(self, patient_id: str, update_data: dict) -> Union[bool, Exception]:
+        try:
+            result = self.collection.update_one({"_id": patient_id}, {"$set": update_data})
+            return result.modified_count > 0
+        except Exception as error:
+            return error
+
+    def delete(self, patient_id: str) -> Union[bool, Exception]:
+        try:
+            result = self.collection.delete_one({"_id": patient_id})
+            return result.deleted_count > 0
+        except Exception as error:
+            return error

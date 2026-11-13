@@ -5,6 +5,8 @@ import re
 # Import date types to validate the doctor's creation date.
 from datetime import date, datetime
 from xmlrpc import client
+import hashlib
+import secrets
 
 class DoctorService:
     def __init__(self, doctor_repo):
@@ -64,24 +66,21 @@ class DoctorService:
 
         # Return True when all validations are successful.
         return True
-    
+
     def create_doctor(self, doctor):
         if self.doctor_repo.checkExist(doctor["register"])==True:
             return "Doctor with this register already exists."
         else:
+
+
+            salt = secrets.token_bytes(16)
+            iterations = 600_000
+            password_hash = hashlib.pbkdf2_hmac(
+                "sha256", doctor["password"].encode("utf-8"), salt, iterations
+            )
+            doctor = doctor.copy()
+            doctor["password"] = (
+                f"pbkdf2_sha256${iterations}${salt.hex()}${password_hash.hex()}"
+            )
             self.doctor_repo.create(doctor)
             return "Doctor created successfully."
-
-    def get_doctor_by_register(self, register: str) -> dict:
-        return self.doctor_repo.get(register)
-
-    def update_doctor(self, register: str, update_data: dict) -> bool:
-        if self.validate_doctor(update_data):
-            return self.doctor_repo.update(register, update_data)
-        else:
-            raise ValueError("Invalid doctor data")
-
-    def delete_doctor(self, register: str) -> bool:
-        return self.doctor_repo.delete(register)
-    
-        
