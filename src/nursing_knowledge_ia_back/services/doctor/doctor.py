@@ -71,4 +71,17 @@ class DoctorService:
         else:
             self.doctor_repo.create(doctor)
             return "Doctor created successfully."
+
+    def get_doctor_by_register(self, register: str) -> dict:
+        return self.doctor_repo.get(register)
+
+    def update_doctor(self, register: str, update_data: dict) -> bool:
+        if self.validate_doctor(update_data):
+            return self.doctor_repo.update(register, update_data)
+        else:
+            raise ValueError("Invalid doctor data")
+
+    def delete_doctor(self, register: str) -> bool:
+        return self.doctor_repo.delete(register)
+    
         
